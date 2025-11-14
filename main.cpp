@@ -2,6 +2,7 @@
 #include"input.h"
 #include"MaxHeap.h"
 #include"MinHeap.h"
+#include<vector>
 using namespace std;
 
 void HeapMenu();
