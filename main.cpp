@@ -8,6 +8,7 @@ void HeapMenu();
 void maxHeap();
 void minHeap();
 void UnionAndIntersect();
+void HeapSTL();
 
 int main() {
     do {
@@ -25,11 +26,7 @@ int main() {
         case 0: exit(1);
         case 1: HeapMenu();  break;
         case 2: UnionAndIntersect(); break;
-        case 3:
-        {
-
-        }
-        break;
+        case 3:HeapSTL(); break;
         default: cout << "\n\tERROR: invalud option.\n";
         }
 
@@ -458,6 +455,231 @@ void UnionAndIntersect()
 
         default:
             cout << "\n\tERROR: invalid option.\n";
+        }
+
+        cout << "\n\n";
+        system("pause");
+    } while (true);
+}
+
+void HeapSTL()
+{
+    vector<int> v;   // dynamic array that we will treat as a heap sometimes
+
+    do {
+        system("cls");
+        cout << "\n\t\t3> Heap in C++ STL";
+        cout << "\n\t\t" << string(70, char(205));
+        cout << "\n\t\t\tA> create a dynamic array";
+        cout << "\n\t\t\tB> push_back() an element";
+        cout << "\n\t\t\tC> make_heap()";
+        cout << "\n\t\t\tD> front()";
+        cout << "\n\t\t\tE> push_heap()";
+        cout << "\n\t\t\tF> pop_heap()";
+        cout << "\n\t\t\tG> sort_heap()";
+        cout << "\n\t\t\tH> is_heap()";
+        cout << "\n\t\t\tI> is_heap_until()";
+        cout << "\n\t\t\tJ> display";
+        cout << "\n\t\t" << string(70, char(196));
+        cout << "\n\t\t\t0> return";
+        cout << "\n\t\t" << string(70, char(205)) << '\n';
+
+        char option = toupper(inputChar("\n\t\tOption: ", static_cast<string>("ABCDEFGHIJ0")));
+
+        switch (option)
+        {
+        case '0':
+            return;
+
+            // A) create / reset dynamic array
+        case 'A':
+        {
+            v.clear();
+            int n = inputInteger("\n\t\tEnter number of elements to create: ", 0, 1000);
+            /*for (int i = 0; i < n; ++i)
+            {
+                int value = inputInteger("\t\tEnter value #" + to_string(i + 1) + ": ");
+                v.push_back(value);
+            }*/
+            break;
+        }
+
+        // B) push_back one element (no heap maintenance yet)
+        case 'B':
+        {
+            int value = inputInteger("\n\t\tEnter a value to push_back: ");
+
+            // check for duplicate in the current vector
+            while (find(v.begin(), v.end(), value) != v.end())
+            {
+                cout << "\n\t\tERROR: the element, " << value
+                    << ", already exists in the vector. Please re-specify.\n";
+                value = inputInteger("\n\t\tEnter a value to push_back: ");
+            }
+
+            v.push_back(value);
+      
+            break;
+        }
+
+        // C) make_heap over the whole vector
+        case 'C':
+        {
+            if (v.empty())
+            {
+                cout << "\n\t\tThe dynamic array is empty. Nothing to make a heap from.";
+            }
+            else
+            {
+                make_heap(v.begin(), v.end());    // max-heap by default
+                cout << "\n\t\tmake_heap() has been applied. The vector now represents a max heap.";
+            }
+            break;
+        }
+
+        // D) front() of the heap (root) — works on any vector, but meaningful if it’s a heap
+        case 'D':
+        {
+            if (v.empty())
+                cout << "\n\t\tThe dynamic array is empty.";
+            else
+                cout << "\n\t\tfront() of the vector: " << v.front();
+            break;
+        }
+
+        // E) push_heap(): assume the last element was added with push_back()
+        case 'E':
+        {
+            if (v.empty())
+            {
+                cout << "\n\t\tThe dynamic array is empty. Use push_back() first.";
+                break;
+            }
+
+            if (v.size() == 1)
+            {
+                cout << "\n\t\tOnly one element: it is trivially a heap.";
+                break;
+            }
+
+            // Precondition: [first, last-1) must already be a heap
+            if (!is_heap(v.begin(), v.end() - 1))
+            {
+                cout << "\n\t\tERROR: [begin, end-1) is not a heap.\n"
+                    << "\t\tUse make_heap() first, then push_back() and push_heap().";
+            }
+            else
+            {
+                push_heap(v.begin(), v.end());
+                cout << "\n\t\tpush_heap() has been applied to the last element.";
+            }
+            break;
+        }
+
+        // F) pop_heap(): move largest element to end, then pop_back()
+        case 'F':
+        {
+            if (v.empty())
+            {
+                cout << "\n\t\tThe heap/vector is empty.";
+            }
+            else
+            {
+                if (!is_heap(v.begin(), v.end()))
+                {
+                    cout << "\n\t\tERROR: The vector is not a heap. Use make_heap() first.";
+                }
+                else
+                {
+                    pop_heap(v.begin(), v.end());      // largest to v.back()
+                    int removed = v.back();
+                    v.pop_back();
+                    cout << "\n\t\tpop_heap() removed: " << removed;
+                }
+            }
+            break;
+        }
+
+        // G) sort_heap(): sort elements (after this, it is no longer a heap)
+        case 'G':
+        {
+            if (v.empty())
+            {
+                cout << "\n\t\tThe vector is empty.";
+            }
+            else
+            {
+                if (!is_heap(v.begin(), v.end()))
+                {
+                    cout << "\n\t\tERROR: The vector is not a heap. Use make_heap() first.";
+                }
+                else
+                {
+                    sort_heap(v.begin(), v.end());   // sorts in descending order for max-heap
+                    cout << "\n\t\tsort_heap() has been applied. The vector is now sorted (no longer a heap).";
+                }
+            }
+            break;
+        }
+
+        // H) is_heap(): check if current vector satisfies heap property
+        case 'H':
+        {
+            if (v.empty())
+            {
+                cout << "\n\t\tThe vector is empty. An empty range is considered a heap.";
+            }
+
+            if (is_heap(v.begin(), v.end()))
+                cout << "\n\t\tYES: The current vector is a heap (max-heap).";
+            else
+                cout << "\n\t\tNO: The current vector is NOT a heap.";
+            break;
+        }
+
+        // I) is_heap_until(): find first position where heap property fails
+        case 'I':
+        {
+            if (v.empty())
+            {
+                cout << "\n\t\tThe vector is empty. Entire (empty) range is a heap.";
+                break;
+            }
+
+            auto it = is_heap_until(v.begin(), v.end());
+            if (it == v.end())
+            {
+                cout << "\n\t\tThe entire vector is a heap.";
+            }
+            else
+            {
+                int index = static_cast<int>(distance(v.begin(), it));
+                cout << "\n\t\tThe range is a heap up to index " << (index - 1)
+                    << ". First violation at index " << index
+                    << " with value " << *it << '.';
+            }
+            break;
+        }
+
+        // J) display: show raw vector contents
+        case 'J':
+        {
+            cout << "\n\t\tCurrent vector contents: ";
+            if (v.empty())
+            {
+                cout << "(empty)";
+            }
+            else
+            {
+                cout << '\n' << "\t\t";
+                for (size_t i = 0; i < v.size(); ++i)
+                    cout << v[i] << ' ';
+            }
+            break;
+        }
+
+        default:
+            cout << "\n\t\tERROR: invalid option.\n";
         }
 
         cout << "\n\n";
