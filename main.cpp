@@ -3,6 +3,7 @@
 #include"MaxHeap.h"
 #include"MinHeap.h"
 #include<vector>
+#include<algorithm>
 using namespace std;
 
 void HeapMenu();
